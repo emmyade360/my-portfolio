@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Mail, MapPin, Download, Globe, Database, Wrench, Github } from "lucide-react";
+import { Mail, MapPin, Download, Globe, Database, Wrench, Github, Cpu, Link } from "lucide-react";
 
 const About = () => {
   const personalInfo = {
@@ -13,28 +13,46 @@ const About = () => {
     {
       title: "Frontend",
       icon: <Globe size={20} />,
-      items: ["React", "Nuxt.js", "Vue", "JavaScript", "TypeScript", "Tailwind CSS", "Framer Motion"],
+      items: ["React", "Next.js", "Vue.js", "Nuxt.js", "TypeScript", "JavaScript", "Tailwind CSS", "Framer Motion", "Zustand", "React Query", "React Hook Form", "Zod", "Vite", "Lightweight Charts"],
     },
     {
-      title: "Backend",
+      title: "Backend & Databases",
       icon: <Database size={20} />,
-      items: ["Node.js", "Express", "MongoDB", "REST APIs", "SQL", "PostgreSQL", "Go(Golang)"],
+      items: ["Node.js", "Express.js", "REST APIs", "PostgreSQL", "MongoDB", "Firebase", "Supabase", "Firebase Admin", "Nodemailer", "Go (Golang)"],
     },
     {
-      title: "Tools",
+      title: "AI & APIs",
+      icon: <Cpu size={20} />,
+      items: ["Anthropic Claude API", "OpenAI SDK", "Groq", "Cerebras", "Cloudinary", "Web3Forms"],
+    },
+    {
+      title: "Blockchain / Web3",
+      icon: <Link size={20} />,
+      items: ["bitcoinjs-lib", "TronWeb", "BIP32", "BIP39", "tiny-secp256k1"],
+    },
+    {
+      title: "Tools & DevOps",
       icon: <Wrench size={20} />,
-      items: ["Git", "Docker", "Vercel", "Netlify", "supabase", "Web3Forms", "GitHub", "Cloudflare"],
+      items: ["Git", "GitHub", "Docker", "Vercel", "Netlify", "Cloudflare", "Cloudinary", "Datadog", "ESLint", "Prettier", "Jest"],
     },
   ];
 
   const services = [
     {
       title: "Web Development",
-      desc: "Building responsive, high-performance websites and web applications using modern technologies.",
+      desc: "Building responsive, high-performance websites and web applications using modern technologies like React, Next.js, and Vue.",
     },
     {
       title: "Backend Development",
-      desc: "Designing and implementing scalable server-side solutions and APIs.",
+      desc: "Designing and implementing scalable server-side solutions, REST APIs, and database integrations with Firebase and Supabase.",
+    },
+    {
+      title: "AI Integration",
+      desc: "Integrating AI models and APIs (Claude, OpenAI, Groq, Cerebras) into web applications to power intelligent, agentic features.",
+    },
+    {
+      title: "Blockchain / Web3",
+      desc: "Building crypto wallets and blockchain integrations using Bitcoin, Tron, and BIP32/BIP39 standards.",
     },
   ];
 
