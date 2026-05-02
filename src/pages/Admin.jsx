@@ -8,9 +8,6 @@ import { getAdminProjects, saveAdminProject, deleteAdminProject } from "../lib/a
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "admin123";
 
-const buildSitePreview = (url) =>
-  `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=1200&h=800`;
-
 const normalizeUrl = (raw) => {
   if (!raw) return null;
   const trimmed = raw.trim();
@@ -99,9 +96,7 @@ function PasswordGate({ onAuth }) {
 
 function LivePreview({ liveUrl }) {
   const normalizedUrl = useMemo(() => normalizeUrl(liveUrl), [liveUrl]);
-  const previewUrl = normalizedUrl ? buildSitePreview(normalizedUrl) : "";
-
-  if (!previewUrl) return null;
+  if (!normalizedUrl) return null;
 
   return (
     <div className="rounded-xl overflow-hidden border border-white/10 bg-slate-900">
@@ -109,13 +104,22 @@ function LivePreview({ liveUrl }) {
         <span className="text-xs text-slate-400 truncate max-w-[80%]">{normalizedUrl}</span>
         <CheckCircle size={12} className="text-cyan-400" />
       </div>
-      <img
-        key={previewUrl}
-        src={previewUrl}
-        alt="Site preview"
-        className="w-full h-40 object-cover object-top"
-        loading="lazy"
-      />
+      <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+        <iframe
+          key={normalizedUrl}
+          src={normalizedUrl}
+          title="Site preview"
+          className="absolute inset-0 h-full w-full bg-white"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts"
+        />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent px-3 py-2">
+          <p className="text-[11px] text-slate-200">
+            If the site blocks embedding, use the live link below to open it in a new tab.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -218,7 +222,7 @@ export default function Admin() {
       html_url: normalizeUrl(form.html_url),
       language: form.language.trim(),
       name: form.displayName.trim().toLowerCase().replace(/\s+/g, "-"),
-      imageUrl: liveUrl ? buildSitePreview(liveUrl) : null,
+      imageUrl: null,
     };
 
     const success = await saveAdminProject(project);

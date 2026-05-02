@@ -20,7 +20,16 @@ export default function Card({ title, description, link, imageUrl, liveUrl, lang
         className="group mb-4 block"
       >
         <div className="relative overflow-hidden rounded-xl border border-white/10 bg-slate-900/60">
-          {imageUrl && !hasImageError ? (
+          {liveUrl ? (
+            <iframe
+              src={liveUrl}
+              title={`${title} live preview`}
+              className="h-44 w-full bg-white"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts"
+            />
+          ) : imageUrl && !hasImageError ? (
             <img
               src={imageUrl}
               alt={`${title} preview`}
