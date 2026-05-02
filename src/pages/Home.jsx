@@ -1,31 +1,33 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Mail, Github } from "lucide-react";
 
 const PROFILE_IMAGE = "https://github.com/emmyade360.png?size=512";
 
 export default function Home() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section
       id="home"
-      className="relative min-h-screen overflow-hidden px-6 pb-16 pt-12 md:px-12 lg:px-20"
+      className="relative min-h-screen overflow-hidden px-6 pb-16 pt-8 md:px-12 md:pt-12 lg:px-20"
     >
       <motion.div
-        animate={{ y: [0, 30, 0], scale: [1, 1.1, 1] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? { opacity: 1 } : { y: [0, 30, 0], scale: [1, 1.1, 1] }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 8, repeat: Infinity, ease: "easeInOut" }}
         className="absolute left-[-3rem] top-20 h-40 w-40 rounded-full bg-cyan-500/15 blur-2xl md:left-10 md:h-64 md:w-64"
       />
       <motion.div
-        animate={{ y: [0, -40, 0], x: [0, 20, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? { opacity: 1 } : { y: [0, -40, 0], x: [0, 20, 0] }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 10, repeat: Infinity, ease: "easeInOut" }}
         className="absolute right-[-2rem] top-32 h-36 w-36 rounded-full bg-violet-500/15 blur-2xl md:right-20 md:h-48 md:w-48"
       />
       <motion.div
-        animate={{ y: [0, 20, 0], x: [0, -15, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? { opacity: 1 } : { y: [0, 20, 0], x: [0, -15, 0] }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 12, repeat: Infinity, ease: "easeInOut" }}
         className="absolute bottom-24 left-1/3 h-24 w-24 rounded-full bg-indigo-500/10 blur-2xl md:h-32 md:w-32"
       />
 
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-7rem)] max-w-6xl items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-6rem)] max-w-6xl items-center gap-10 sm:gap-12 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="max-w-3xl">
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -58,7 +60,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="mb-10 max-w-2xl text-base leading-relaxed text-slate-700 dark:text-gray-300 sm:text-lg md:text-xl"
+            className="mb-8 max-w-2xl text-base leading-relaxed text-slate-700 dark:text-gray-300 sm:mb-10 sm:text-lg md:text-xl"
           >
             I build things that work and work well. As a full-stack developer with hands-on experience
             in React, Node.js, and Go (Golang), I specialize in turning ideas into fully realized digital
@@ -106,6 +108,7 @@ export default function Home() {
                 alt="Adejoh Emmanuel profile"
                 className="h-[20rem] w-full object-cover sm:h-[24rem] md:h-[28rem]"
                 loading="eager"
+                decoding="async"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-transparent p-5">
                 <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">GitHub Profile</p>
@@ -130,20 +133,22 @@ export default function Home() {
         </motion.div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 md:block"
-      >
+      {!prefersReducedMotion ? (
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="glass flex h-10 w-6 justify-center rounded-full pt-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+          className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 md:block"
         >
-          <div className="h-2 w-1 rounded-full bg-cyan-400" />
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="glass flex h-10 w-6 justify-center rounded-full pt-2"
+          >
+            <div className="h-2 w-1 rounded-full bg-cyan-400" />
+          </motion.div>
         </motion.div>
-      </motion.div>
+      ) : null}
     </section>
   );
 }

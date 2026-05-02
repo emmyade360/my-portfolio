@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = globalThis.process?.env?.PORT || 3002;
 
 // Rate limiting configuration
 const rateLimitStore = new Map();

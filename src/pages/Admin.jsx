@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Trash2, Eye, EyeOff, ExternalLink, Github,
-  ArrowLeft, Save, Globe, RefreshCw, CheckCircle,
+  ArrowLeft, Save, Globe, CheckCircle,
 } from "lucide-react";
 import { getAdminProjects, saveAdminProject, deleteAdminProject } from "../lib/adminProjects";
 
@@ -57,7 +57,10 @@ function PasswordGate({ onAuth }) {
             placeholder="Password"
             value={password}
             autoFocus
-            onChange={(e) => { setPassword(e.target.value); setError(false); }}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setError(false);
+            }}
             onKeyDown={(e) => e.key === "Enter" && submit()}
             className="lg-input w-full px-4 py-3 pr-11 rounded-lg dark:text-white text-slate-900"
           />
@@ -95,53 +98,24 @@ function PasswordGate({ onAuth }) {
 }
 
 function LivePreview({ liveUrl }) {
-  const [src, setSrc] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | loading | loaded | error
-  const timerRef = useRef(null);
+  const normalizedUrl = useMemo(() => normalizeUrl(liveUrl), [liveUrl]);
+  const previewUrl = normalizedUrl ? buildSitePreview(normalizedUrl) : "";
 
-  useEffect(() => {
-    clearTimeout(timerRef.current);
-    const normalized = normalizeUrl(liveUrl);
-    if (!normalized) {
-      setSrc("");
-      setStatus("idle");
-      return;
-    }
-    setStatus("loading");
-    timerRef.current = setTimeout(() => {
-      setSrc(buildSitePreview(normalized));
-    }, 900);
-    return () => clearTimeout(timerRef.current);
-  }, [liveUrl]);
-
-  if (status === "idle" && !src) return null;
+  if (!previewUrl) return null;
 
   return (
     <div className="rounded-xl overflow-hidden border border-white/10 bg-slate-900">
       <div className="flex items-center justify-between px-3 py-1.5 bg-slate-800/60 border-b border-white/10">
-        <span className="text-xs text-slate-400 truncate max-w-[80%]">{normalizeUrl(liveUrl)}</span>
-        {status === "loading" && <RefreshCw size={12} className="text-cyan-400 animate-spin" />}
-        {status === "loaded" && <CheckCircle size={12} className="text-green-400" />}
+        <span className="text-xs text-slate-400 truncate max-w-[80%]">{normalizedUrl}</span>
+        <CheckCircle size={12} className="text-cyan-400" />
       </div>
-      {status === "loading" ? (
-        <div className="h-40 flex items-center justify-center text-slate-500 text-sm gap-2">
-          <RefreshCw size={14} className="animate-spin" /> Generating preview…
-        </div>
-      ) : (
-        <img
-          key={src}
-          src={src}
-          alt="Site preview"
-          className="w-full h-40 object-cover object-top"
-          onLoad={() => setStatus("loaded")}
-          onError={() => setStatus("error")}
-        />
-      )}
-      {status === "error" && (
-        <div className="h-40 flex items-center justify-center text-slate-500 text-sm">
-          Preview unavailable
-        </div>
-      )}
+      <img
+        key={previewUrl}
+        src={previewUrl}
+        alt="Site preview"
+        className="w-full h-40 object-cover object-top"
+        loading="lazy"
+      />
     </div>
   );
 }
@@ -160,7 +134,10 @@ function ProjectCard({ project, onDelete }) {
           src={project.imageUrl}
           alt={project.displayName}
           className="w-full h-32 object-cover object-top border-b border-white/10"
-          onError={(e) => { e.target.style.display = "none"; }}
+          loading="lazy"
+          onError={(e) => {
+            e.target.style.display = "none";
+          }}
         />
       )}
       <div className="p-4 flex items-start gap-3">
@@ -174,14 +151,22 @@ function ProjectCard({ project, onDelete }) {
           )}
           <div className="flex gap-3 mt-2 flex-wrap">
             {project.liveUrl && (
-              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
-                className="text-xs text-cyan-400 flex items-center gap-1 hover:underline">
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-cyan-400 flex items-center gap-1 hover:underline"
+              >
                 <ExternalLink size={11} /> Live site
               </a>
             )}
             {project.html_url && (
-              <a href={project.html_url} target="_blank" rel="noopener noreferrer"
-                className="text-xs text-cyan-300 flex items-center gap-1 hover:underline">
+              <a
+                href={project.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-cyan-300 flex items-center gap-1 hover:underline"
+              >
                 <Github size={11} /> Source
               </a>
             )}
@@ -200,16 +185,11 @@ function ProjectCard({ project, onDelete }) {
 }
 
 export default function Admin() {
-  const [authed, setAuthed] = useState(
-    () => sessionStorage.getItem("admin-authed") === "1"
-  );
-  const [projects, setProjects] = useState([]);
+  const initialAuthed = sessionStorage.getItem("admin-authed") === "1";
+  const [authed, setAuthed] = useState(initialAuthed);
+  const [projects, setProjects] = useState(() => (initialAuthed ? getAdminProjects() : []));
   const [form, setForm] = useState(EMPTY_FORM);
   const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    if (authed) setProjects(getAdminProjects());
-  }, [authed]);
 
   const refresh = () => setProjects(getAdminProjects());
 
@@ -240,21 +220,25 @@ export default function Admin() {
     refresh();
   };
 
+  const handleAuth = () => {
+    setAuthed(true);
+    setProjects(getAdminProjects());
+  };
+
   if (!authed) {
-    return <PasswordGate onAuth={() => setAuthed(true)} />;
+    return <PasswordGate onAuth={handleAuth} />;
   }
 
   const inputClass =
     "lg-input w-full px-4 py-2.5 rounded-lg dark:text-white text-slate-900 text-sm";
 
-  const labelClass = "text-xs font-medium dark:text-gray-400 text-slate-500 uppercase tracking-wide mb-1.5 block";
+  const labelClass =
+    "text-xs font-medium dark:text-gray-400 text-slate-500 uppercase tracking-wide mb-1.5 block";
 
   return (
     <div className="min-h-screen dark:bg-[#06101f] bg-[#c4b9ad] py-10 px-6 md:px-14">
       <div className="max-w-5xl mx-auto">
-
-        {/* Header */}
-        <div className="flex items-center gap-6 mb-10">
+        <div className="mb-10 flex items-center gap-6">
           <a
             href="/#projects"
             className="flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
@@ -265,17 +249,15 @@ export default function Admin() {
             <h1 className="ai-heading text-3xl font-bold dark:text-white text-slate-900">
               Projects Admin
             </h1>
-            <p className="text-sm dark:text-slate-400 text-slate-500 mt-0.5">
+            <p className="mt-0.5 text-sm dark:text-slate-400 text-slate-500">
               Projects added here appear live on the portfolio.
             </p>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 items-start">
-
-          {/* ── Form ── */}
-          <div className="glass dark:bg-black/30 bg-white/60 rounded-2xl p-6 border border-white/15 sticky top-8">
-            <h2 className="text-lg font-semibold dark:text-white text-slate-900 flex items-center gap-2 mb-5">
+        <div className="grid gap-8 items-start lg:grid-cols-[1fr_1.1fr]">
+          <div className="glass dark:bg-black/30 bg-white/60 rounded-2xl border border-white/15 p-6 lg:sticky lg:top-8">
+            <h2 className="mb-5 flex items-center gap-2 text-lg font-semibold dark:text-white text-slate-900">
               <Plus size={18} className="text-cyan-400" /> Add Project
             </h2>
 
@@ -316,7 +298,6 @@ export default function Admin() {
                 />
               </div>
 
-              {/* Live preview */}
               <LivePreview liveUrl={form.liveUrl} />
 
               <div>
@@ -338,31 +319,38 @@ export default function Admin() {
                 <input
                   value={form.language}
                   onChange={(e) => setForm({ ...form, language: e.target.value })}
-                  placeholder="TypeScript, React, Node.js…"
+                  placeholder="TypeScript, React, Node.js..."
                   className={inputClass}
                 />
               </div>
 
               <button
                 type="submit"
-                className="lg-btn w-full py-3 text-white font-medium flex items-center justify-center gap-2"
+                className="lg-btn flex w-full items-center justify-center gap-2 py-3 font-medium text-white"
               >
                 <span className="relative z-10 flex items-center gap-2">
-                  {saved ? <><CheckCircle size={16} /> Saved!</> : <><Save size={16} /> Add to Portfolio</>}
+                  {saved ? (
+                    <>
+                      <CheckCircle size={16} /> Saved!
+                    </>
+                  ) : (
+                    <>
+                      <Save size={16} /> Add to Portfolio
+                    </>
+                  )}
                 </span>
               </button>
             </form>
           </div>
 
-          {/* ── Saved projects ── */}
           <div>
-            <h2 className="text-lg font-semibold dark:text-white text-slate-900 mb-4">
+            <h2 className="mb-4 text-lg font-semibold dark:text-white text-slate-900">
               Saved Projects{" "}
-              <span className="text-cyan-400 font-normal text-base">({projects.length})</span>
+              <span className="text-base font-normal text-cyan-400">({projects.length})</span>
             </h2>
 
             {projects.length === 0 ? (
-              <div className="glass dark:bg-black/30 bg-white/60 rounded-2xl p-10 text-center border border-white/15 dark:text-slate-500 text-slate-400">
+              <div className="glass dark:bg-black/30 bg-white/60 rounded-2xl border border-white/15 p-10 text-center dark:text-slate-500 text-slate-400">
                 No projects yet. Add one with the form.
               </div>
             ) : (
