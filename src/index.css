@@ -236,13 +236,28 @@ html:not(.dark) .glass {
     inset 0 1px 0 rgba(255, 255, 255, 0.38);
 }
 
+.theme-toggle {
+  --thumb-width: 3.35rem;
+  --thumb-shift: 3.65rem;
+}
+
+.theme-toggle-desktop {
+  --thumb-width: 3.85rem;
+  --thumb-shift: 3.95rem;
+}
+
+.theme-toggle-mobile {
+  --thumb-width: 2.95rem;
+  --thumb-shift: 2.95rem;
+}
+
 .theme-toggle-thumb {
   position: absolute;
-  left: 0.35rem;
-  top: 0.2rem;
+  left: 0.25rem;
+  top: 0.25rem;
   z-index: 0;
-  height: calc(100% - 0.4rem);
-  width: 4.35rem;
+  height: calc(100% - 0.5rem);
+  width: var(--thumb-width);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
   box-shadow:
@@ -251,10 +266,18 @@ html:not(.dark) .glass {
   transition: transform 0.3s ease;
 }
 
+.theme-toggle[aria-pressed="true"] .theme-toggle-thumb {
+  transform: translateX(var(--thumb-shift));
+}
+
+.theme-toggle[aria-pressed="false"] .theme-toggle-thumb {
+  transform: translateX(0);
+}
+
 .mobile-icon-btn {
   display: inline-flex;
-  height: 2.5rem;
-  width: 2.5rem;
+  height: 2.2rem;
+  width: 2.2rem;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
@@ -309,6 +332,13 @@ html:not(.dark) .glass {
 .dark .mobile-icon-btn:hover {
   border-color: rgba(125, 211, 252, 0.3);
   background: rgba(8, 40, 78, 0.88);
+}
+
+@media (max-width: 767px) {
+  .theme-toggle-mobile {
+    width: 6.4rem !important;
+    --thumb-shift: 2.95rem;
+  }
 }
 
 /* Warm-ash variant for light theme */

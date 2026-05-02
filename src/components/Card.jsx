@@ -5,6 +5,20 @@ export default function Card({ title, description, link, imageUrl, liveUrl, lang
   const previewHref = liveUrl || link;
   const [failedImageUrl, setFailedImageUrl] = useState("");
   const hasImageError = failedImageUrl === imageUrl;
+  const blockedIframeHosts = new Set(["www.npmjs.com", "npmjs.com"]);
+
+  let shouldEmbedLiveUrl = false;
+  if (liveUrl) {
+    try {
+      const hostname = new URL(liveUrl).hostname.toLowerCase();
+      // Most Vercel deployments and npmjs pages deny iframe embedding.
+      const likelyBlockedHost =
+        hostname.endsWith(".vercel.app") || blockedIframeHosts.has(hostname);
+      shouldEmbedLiveUrl = !likelyBlockedHost;
+    } catch {
+      shouldEmbedLiveUrl = false;
+    }
+  }
 
   return (
     <motion.div
@@ -20,7 +34,7 @@ export default function Card({ title, description, link, imageUrl, liveUrl, lang
         className="group mb-4 block"
       >
         <div className="relative overflow-hidden rounded-xl border border-white/10 bg-slate-900/60">
-          {liveUrl ? (
+          {liveUrl && shouldEmbedLiveUrl ? (
             <iframe
               src={liveUrl}
               title={`${title} live preview`}
@@ -47,13 +61,21 @@ export default function Card({ title, description, link, imageUrl, liveUrl, lang
               <div>
                 <p className="text-lg font-semibold text-white">{title}</p>
                 <p className="mt-2 text-sm text-slate-300">
-                  Open the project to view its source or live build.
+                  {liveUrl && !shouldEmbedLiveUrl
+                    ? "Live preview is blocked by the target site. Use Open site to view it."
+                    : "Open the project to view its source or live build."}
                 </p>
               </div>
             </div>
           )}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent px-4 py-3 text-xs font-medium text-white">
-            <span>{liveUrl ? "Live project preview" : "Repository preview"}</span>
+            <span>
+              {liveUrl
+                ? shouldEmbedLiveUrl
+                  ? "Live project preview"
+                  : "Live preview unavailable"
+                : "Repository preview"}
+            </span>
             <span className="text-cyan-300">{liveUrl ? "Open site ->" : "Open source ->"}</span>
           </div>
         </div>

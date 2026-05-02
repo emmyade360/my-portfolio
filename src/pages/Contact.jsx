@@ -220,6 +220,7 @@ export default function Contact() {
                   id="name"
                   name="name"
                   type="text"
+                  autoComplete="name"
                   required
                   disabled={isDisabled}
                   className="lg-input w-full p-3 rounded-lg dark:text-white text-slate-900 disabled:opacity-50"
@@ -233,6 +234,7 @@ export default function Contact() {
                   id="email"
                   name="email"
                   type="email"
+                  autoComplete="email"
                   required
                   disabled={isDisabled}
                   className="lg-input w-full p-3 rounded-lg dark:text-white text-slate-900 disabled:opacity-50"
@@ -248,6 +250,7 @@ export default function Contact() {
                 id="subject"
                 name="subject"
                 type="text"
+                autoComplete="off"
                 disabled={isDisabled}
                 className="lg-input w-full p-3 rounded-lg dark:text-white text-slate-900 disabled:opacity-50"
               />

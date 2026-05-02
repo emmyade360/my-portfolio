@@ -51,6 +51,8 @@ function PasswordGate({ onAuth }) {
         <div className="relative mb-3">
           <input
             type={showPw ? "text" : "password"}
+            name="admin-password"
+            autoComplete="current-password"
             placeholder="Password"
             value={password}
             autoFocus
