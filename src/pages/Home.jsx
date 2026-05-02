@@ -73,18 +73,22 @@ export default function Home() {
           >
             <a
               href="#projects"
-              className="group neon-pill flex items-center justify-center gap-2 rounded-full px-8 py-4 font-semibold text-cyan-300 transition-all duration-300 hover:scale-105 glass"
+              className="lg-btn group flex items-center justify-center gap-2 px-8 py-4 font-semibold text-cyan-300"
             >
-              View My Work
-              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              <span className="relative z-10 flex items-center gap-2">
+                View My Work
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </span>
             </a>
 
             <a
               href="#contact"
-              className="group flex items-center justify-center gap-2 rounded-full px-8 py-4 font-semibold text-slate-900 transition-all duration-300 hover:scale-105 dark:text-white glass"
+              className="lg-btn group flex items-center justify-center gap-2 px-8 py-4 font-semibold dark:text-white text-slate-900"
             >
-              <Mail className="h-5 w-5" />
-              Contact Me
+              <span className="relative z-10 flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                Contact Me
+              </span>
             </a>
           </motion.div>
         </div>
@@ -114,7 +118,7 @@ export default function Home() {
                     href="https://github.com/emmyade360"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10 text-cyan-300 transition hover:bg-cyan-400 hover:text-slate-950"
+                    className="lg-btn flex h-11 w-11 items-center justify-center text-cyan-300"
                     aria-label="Open GitHub profile"
                   >
                     <Github className="h-5 w-5" />

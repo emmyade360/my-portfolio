@@ -1,16 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Calendar } from "lucide-react";
-
-const experiences = [
-  {
-    company: "Mercuryx",
-    role: "Tech Trainee & Software Engineer",
-    period: "2024 - Present",
-    description: "Dual role combining active software engineering with structured technical mentorship. On the engineering side, collaborate with the team to build and maintain scalable software systems across the full development lifecycle — from design and planning through to QA and deployment. On the mentorship side, lead frontend development sessions for junior developers, covering core web technologies including HTML, CSS, and JavaScript, with a focus on building practical skills and real-world coding confidence. Passionate about growing the next generation of developers while continuing to sharpen my own engineering craft.",
-    current: true,
-  }
-];
+import { experiences } from "../data/profile";
 
 export default function Experience() {
   return (
@@ -32,34 +23,41 @@ export default function Experience() {
 
         <div className="space-y-6">
           {experiences.map((exp, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              className="glass dark:bg-black/30 bg-white/10 p-6 md:p-8 rounded-2xl hover:scale-[1.02] transition-transform duration-300"
-            >
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white">
-                      <Briefcase size={20} />
+            <div key={index} className="relative">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                className="glass dark:bg-black/30 bg-white/10 p-6 md:p-8 rounded-2xl hover:scale-[1.02] transition-transform duration-300"
+              >
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white">
+                        <Briefcase size={20} />
+                      </div>
+                      <h3 className="text-xl font-bold dark:text-white text-slate-900">
+                        {exp.role}
+                      </h3>
                     </div>
-                    <h3 className="text-xl font-bold dark:text-white text-slate-900">
-                      {exp.role}
-                    </h3>
+                    <p className="text-cyan-400 font-semibold text-lg mb-2">{exp.company}</p>
+                    <p className="dark:text-gray-300 text-slate-600 leading-relaxed">
+                      {exp.description}
+                    </p>
                   </div>
-                  <p className="text-cyan-400 font-semibold text-lg mb-2">{exp.company}</p>
-                  <p className="dark:text-gray-300 text-slate-600 leading-relaxed">
-                    {exp.description}
-                  </p>
+                  <div className="flex items-center gap-2 text-sm dark:text-gray-400 text-slate-500">
+                    <Calendar size={16} />
+                    <span>{exp.period}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm dark:text-gray-400 text-slate-500">
-                  <Calendar size={16} />
-                  <span>{exp.period}</span>
+              </motion.div>
+
+              {index < experiences.length - 1 ? (
+                <div className="flex justify-center py-3" aria-hidden="true">
+                  <div className="h-12 w-1 rounded-full bg-gradient-to-b from-cyan-400 via-blue-500 to-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.35)]" />
                 </div>
-              </div>
-            </motion.div>
+              ) : null}
+            </div>
           ))}
         </div>
       </div>

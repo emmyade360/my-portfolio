@@ -11,8 +11,10 @@ export default function Card({ title, description, link, imageUrl, liveUrl, lang
 
   return (
     <motion.div
-      whileHover={{ scale: 1.05, boxShadow: "0px 0px 30px rgba(34, 211, 238, 0.3)" }}
-      className="glass dark:bg-black/30 bg-white/10 p-6 rounded-xl cursor-pointer transition-all duration-300 hover:border-cyan-400/50"
+      whileHover={{ scale: 1.02, y: -4 }}
+      transition={{ type: "spring", stiffness: 280, damping: 22 }}
+      className="glass rounded-2xl p-5 cursor-pointer"
+      style={{ willChange: "transform" }}
     >
       <a
         href={previewHref}
@@ -20,12 +22,12 @@ export default function Card({ title, description, link, imageUrl, liveUrl, lang
         rel="noopener noreferrer"
         className="group block mb-4"
       >
-        <div className="relative overflow-hidden rounded-lg border border-white/10 bg-slate-900">
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-slate-900/60">
           {imageUrl && !hasImageError ? (
             <img
               src={imageUrl}
               alt={`${title} preview`}
-              className="h-44 w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              className="h-44 w-full object-cover transition duration-500 group-hover:scale-[1.04]"
               loading="lazy"
               onError={() => setHasImageError(true)}
             />
@@ -45,22 +47,23 @@ export default function Card({ title, description, link, imageUrl, liveUrl, lang
           )}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent px-4 py-3 text-xs font-medium text-white">
             <span>{liveUrl ? "Live project preview" : "Repository preview"}</span>
-            <span className="text-cyan-300">{liveUrl ? "Open site" : "Open source"}</span>
+            <span className="text-cyan-300">{liveUrl ? "Open site →" : "Open source →"}</span>
           </div>
         </div>
       </a>
 
       <h3 className="text-xl font-bold mb-2 text-cyan-400">{title}</h3>
-      <div className="text-gray-300 dark:text-gray-200 mb-4">{description}</div>
-      <div className="flex items-center gap-4">
+      <div className="text-gray-300 dark:text-gray-200 mb-4 text-sm leading-relaxed">{description}</div>
+
+      <div className="flex items-center gap-3">
         {liveUrl && (
           <a
             href={liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cyan-400 hover:underline font-medium"
+            className="lg-btn px-4 py-1.5 text-sm font-medium text-cyan-300"
           >
-            Live Site {"->"}
+            <span className="relative z-10">Live Site →</span>
           </a>
         )}
         {link && (
@@ -68,9 +71,9 @@ export default function Card({ title, description, link, imageUrl, liveUrl, lang
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cyan-300 hover:underline font-medium"
+            className="lg-btn px-4 py-1.5 text-sm font-medium text-cyan-200"
           >
-            Source {"->"}
+            <span className="relative z-10">Source →</span>
           </a>
         )}
       </div>

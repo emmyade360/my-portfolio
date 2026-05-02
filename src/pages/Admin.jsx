@@ -59,7 +59,7 @@ function PasswordGate({ onAuth }) {
             autoFocus
             onChange={(e) => { setPassword(e.target.value); setError(false); }}
             onKeyDown={(e) => e.key === "Enter" && submit()}
-            className="w-full bg-white/10 dark:bg-black/20 border border-white/20 rounded-lg px-4 py-3 pr-11 dark:text-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-400 transition-colors"
+            className="lg-input w-full px-4 py-3 pr-11 rounded-lg dark:text-white text-slate-900"
           />
           <button
             type="button"
@@ -85,9 +85,9 @@ function PasswordGate({ onAuth }) {
 
         <button
           onClick={submit}
-          className="w-full py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg font-medium transition-colors"
+          className="lg-btn w-full py-3 text-white font-medium"
         >
-          Login
+          <span className="relative z-10">Login</span>
         </button>
       </motion.div>
     </div>
@@ -245,7 +245,7 @@ export default function Admin() {
   }
 
   const inputClass =
-    "w-full bg-white/10 dark:bg-black/20 border border-white/20 rounded-lg px-4 py-2.5 dark:text-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-400 transition-colors text-sm";
+    "lg-input w-full px-4 py-2.5 rounded-lg dark:text-white text-slate-900 text-sm";
 
   const labelClass = "text-xs font-medium dark:text-gray-400 text-slate-500 uppercase tracking-wide mb-1.5 block";
 
@@ -343,17 +343,14 @@ export default function Admin() {
                 />
               </div>
 
-              <motion.button
+              <button
                 type="submit"
-                whileTap={{ scale: 0.97 }}
-                className="w-full py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                className="lg-btn w-full py-3 text-white font-medium flex items-center justify-center gap-2"
               >
-                {saved ? (
-                  <><CheckCircle size={16} /> Saved!</>
-                ) : (
-                  <><Save size={16} /> Add to Portfolio</>
-                )}
-              </motion.button>
+                <span className="relative z-10 flex items-center gap-2">
+                  {saved ? <><CheckCircle size={16} /> Saved!</> : <><Save size={16} /> Add to Portfolio</>}
+                </span>
+              </button>
             </form>
           </div>
 

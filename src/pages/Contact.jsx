@@ -116,7 +116,7 @@ export default function Contact() {
     const formData = new FormData(form);
     
     // Add Web3Forms access key
-    formData.append("access_key", "31278e51-41e8-49d7-af26-c5597769e8a0");
+    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY);
     formData.append("subject", formData.get("subject") || "New Contact Form Submission");
     formData.append("from_name", formData.get("name"));
     formData.append("email_from", formData.get("email"));
@@ -222,7 +222,7 @@ export default function Contact() {
                   type="text"
                   required
                   disabled={isDisabled}
-                  className="w-full p-3 rounded-lg bg-white/15 dark:bg-black/20 border border-purple-300/50 dark:border-purple-400/30 focus:outline-none focus:ring-2 focus:ring-purple-400 dark:text-white text-slate-900 disabled:opacity-50"
+                  className="lg-input w-full p-3 rounded-lg dark:text-white text-slate-900 disabled:opacity-50"
                 />
               </div>
               <div>
@@ -235,7 +235,7 @@ export default function Contact() {
                   type="email"
                   required
                   disabled={isDisabled}
-                  className="w-full p-3 rounded-lg bg-white/15 dark:bg-black/20 border border-purple-300/50 dark:border-purple-400/30 focus:outline-none focus:ring-2 focus:ring-purple-400 dark:text-white text-slate-900 disabled:opacity-50"
+                  className="lg-input w-full p-3 rounded-lg dark:text-white text-slate-900 disabled:opacity-50"
                 />
               </div>
             </div>
@@ -249,7 +249,7 @@ export default function Contact() {
                 name="subject"
                 type="text"
                 disabled={isDisabled}
-                className="w-full p-3 rounded-lg bg-white/15 dark:bg-black/20 border border-purple-300/50 dark:border-purple-400/30 focus:outline-none focus:ring-2 focus:ring-purple-400 dark:text-white text-slate-900 disabled:opacity-50"
+                className="lg-input w-full p-3 rounded-lg dark:text-white text-slate-900 disabled:opacity-50"
               />
             </div>
 
@@ -263,7 +263,7 @@ export default function Contact() {
                 rows={6}
                 required
                 disabled={isDisabled}
-                className="w-full p-3 rounded-lg bg-white/15 dark:bg-black/20 border border-purple-300/50 dark:border-purple-400/30 focus:outline-none focus:ring-2 focus:ring-purple-400 dark:text-white text-slate-900 disabled:opacity-50"
+                className="lg-input w-full p-3 rounded-lg dark:text-white text-slate-900 disabled:opacity-50"
               />
             </div>
 
@@ -274,20 +274,16 @@ export default function Contact() {
               </div>
             )}
 
-            <motion.button
-              whileHover={!isDisabled ? { scale: 1.01 } : {}}
-              whileTap={!isDisabled ? { scale: 0.98 } : {}}
+            <button
               type="submit"
               disabled={isDisabled}
-              className={`w-full flex items-center justify-center gap-2 py-3 rounded-lg text-white font-semibold transition ${
-                isRateLimited
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
-              } disabled:opacity-50`}
+              className="lg-btn w-full flex items-center justify-center gap-2 py-3 text-white font-semibold"
             >
-              <Send size={16} />
-              {buttonText}
-            </motion.button>
+              <span className="relative z-10 flex items-center gap-2">
+                <Send size={16} />
+                {buttonText}
+              </span>
+            </button>
 
             {submitStatus.message && (
               <p

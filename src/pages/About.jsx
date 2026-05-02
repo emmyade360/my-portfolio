@@ -1,60 +1,15 @@
 import { motion } from "framer-motion";
 import { Mail, MapPin, Download, Globe, Database, Wrench, Github, Cpu, Link } from "lucide-react";
+import { aboutParagraphs, profile, services, skillCategories } from "../data/profile";
 
 const About = () => {
-  const personalInfo = {
-    name: "Emmanuel Adejoh",
-    email: "adejorion@gmail.com",
-    location: "Nigeria",
-    github: "https://github.com/emmyade360",
+  const iconsByTitle = {
+    Frontend: <Globe size={20} />,
+    "Backend & Databases": <Database size={20} />,
+    "AI & APIs": <Cpu size={20} />,
+    "Blockchain / Web3": <Link size={20} />,
+    "Tools & DevOps": <Wrench size={20} />,
   };
-
-  const skillCategories = [
-    {
-      title: "Frontend",
-      icon: <Globe size={20} />,
-      items: ["React", "Next.js", "Vue.js", "Nuxt.js", "TypeScript", "JavaScript", "Tailwind CSS", "Framer Motion", "Zustand", "React Query", "React Hook Form", "Zod", "Vite", "Lightweight Charts"],
-    },
-    {
-      title: "Backend & Databases",
-      icon: <Database size={20} />,
-      items: ["Node.js", "Express.js", "REST APIs", "PostgreSQL", "MongoDB", "Firebase", "Supabase", "Firebase Admin", "Nodemailer", "Go (Golang)"],
-    },
-    {
-      title: "AI & APIs",
-      icon: <Cpu size={20} />,
-      items: ["Anthropic Claude API", "OpenAI SDK", "Groq", "Cerebras", "Cloudinary", "Web3Forms"],
-    },
-    {
-      title: "Blockchain / Web3",
-      icon: <Link size={20} />,
-      items: ["bitcoinjs-lib", "TronWeb", "BIP32", "BIP39", "tiny-secp256k1"],
-    },
-    {
-      title: "Tools & DevOps",
-      icon: <Wrench size={20} />,
-      items: ["Git", "GitHub", "Docker", "Vercel", "Netlify", "Cloudflare", "Cloudinary", "Datadog", "ESLint", "Prettier", "Jest"],
-    },
-  ];
-
-  const services = [
-    {
-      title: "Web Development",
-      desc: "Building responsive, high-performance websites and web applications using modern technologies like React, Next.js, and Vue.",
-    },
-    {
-      title: "Backend Development",
-      desc: "Designing and implementing scalable server-side solutions, REST APIs, and database integrations with Firebase and Supabase.",
-    },
-    {
-      title: "AI Integration",
-      desc: "Integrating AI models and APIs (Claude, OpenAI, Groq, Cerebras) into web applications to power intelligent, agentic features.",
-    },
-    {
-      title: "Blockchain / Web3",
-      desc: "Building crypto wallets and blockchain integrations using Bitcoin, Tron, and BIP32/BIP39 standards.",
-    },
-  ];
 
   return (
     <section id="about" className="min-h-screen py-20 px-6 md:px-20">
@@ -78,40 +33,40 @@ const About = () => {
           >
             {/* Profile Card */}
             <div className="glass dark:bg-black/30 bg-white/10 rounded-2xl p-8 mb-6">
-              <h3 className="text-2xl font-bold mb-6 dark:text-white text-slate-900">{personalInfo.name}</h3>
+              <h3 className="text-2xl font-bold mb-6 dark:text-white text-slate-900">{profile.name}</h3>
               
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Mail className="text-cyan-400" size={20} />
-                  <span className="dark:text-gray-300 text-slate-700">{personalInfo.email}</span>
+                  <span className="dark:text-gray-300 text-slate-700">{profile.email}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <MapPin className="text-cyan-400" size={20} />
-                  <span className="dark:text-gray-300 text-slate-700">{personalInfo.location}</span>
+                  <span className="dark:text-gray-300 text-slate-700">{profile.location}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Github className="text-cyan-400" size={20} />
                   <a
-                    href={personalInfo.github}
+                    href={profile.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="dark:text-gray-300 text-slate-700 hover:text-cyan-300 transition-colors"
                   >
-                    github.com/emmyade360
+                    github.com/{profile.githubHandle}
                   </a>
                 </div>
               </div>
 
-              <motion.a
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <a
                 href="/Resume.pdf"
                 download="Emmanuel-Adejoh-CV.pdf"
-                className="mt-6 flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg font-medium transition-colors"
+                className="lg-btn mt-6 inline-flex items-center gap-2 px-6 py-3 text-white font-medium"
               >
-                <Download size={18} />
-                Download CV
-              </motion.a>
+                <span className="relative z-10 flex items-center gap-2">
+                  <Download size={18} />
+                  Download CV
+                </span>
+              </a>
             </div>
 
             {/* Skills */}
@@ -127,7 +82,7 @@ const About = () => {
                     className="rounded-xl border border-white/15 dark:border-white/10 p-4"
                   >
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-cyan-400">{category.icon}</span>
+                      <span className="text-cyan-400">{iconsByTitle[category.title]}</span>
                       <h5 className="font-semibold dark:text-white text-slate-900">{category.title}</h5>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -152,6 +107,20 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
           >
+            <div className="glass dark:bg-black/30 bg-white/10 rounded-2xl p-8 mb-6">
+              <h3 className="text-2xl font-bold mb-4 dark:text-white text-slate-900">Overview</h3>
+              <div className="space-y-4">
+                {aboutParagraphs.map((paragraph) => (
+                  <p
+                    key={paragraph}
+                    className="dark:text-gray-300 text-slate-600 text-sm leading-relaxed"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+
             <h3 className="text-2xl font-bold mb-6 dark:text-white text-slate-900">What I Do</h3>
             <div className="space-y-4">
               {services.map((service, i) => (
