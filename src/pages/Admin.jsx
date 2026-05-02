@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Trash2, Eye, EyeOff, ExternalLink, Github,
@@ -187,13 +187,26 @@ function ProjectCard({ project, onDelete }) {
 export default function Admin() {
   const initialAuthed = sessionStorage.getItem("admin-authed") === "1";
   const [authed, setAuthed] = useState(initialAuthed);
-  const [projects, setProjects] = useState(() => (initialAuthed ? getAdminProjects() : []));
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(initialAuthed);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saved, setSaved] = useState(false);
 
-  const refresh = () => setProjects(getAdminProjects());
+  const refresh = async () => {
+    if (!authed) return;
+    setLoading(true);
+    const data = await getAdminProjects();
+    setProjects(data);
+    setLoading(false);
+  };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (authed) {
+      refresh();
+    }
+  }, [authed]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.displayName.trim()) return;
 
@@ -208,21 +221,24 @@ export default function Admin() {
       imageUrl: liveUrl ? buildSitePreview(liveUrl) : null,
     };
 
-    saveAdminProject(project);
-    refresh();
-    setForm(EMPTY_FORM);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    const success = await saveAdminProject(project);
+    if (success) {
+      await refresh();
+      setForm(EMPTY_FORM);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    }
   };
 
-  const handleDelete = (id) => {
-    deleteAdminProject(id);
-    refresh();
+  const handleDelete = async (id) => {
+    const success = await deleteAdminProject(id);
+    if (success) {
+      await refresh();
+    }
   };
 
   const handleAuth = () => {
     setAuthed(true);
-    setProjects(getAdminProjects());
   };
 
   if (!authed) {
@@ -349,7 +365,11 @@ export default function Admin() {
               <span className="text-base font-normal text-cyan-400">({projects.length})</span>
             </h2>
 
-            {projects.length === 0 ? (
+            {loading ? (
+              <div className="glass dark:bg-black/30 bg-white/60 rounded-2xl border border-white/15 p-10 text-center dark:text-slate-500 text-slate-400">
+                Loading projects...
+              </div>
+            ) : projects.length === 0 ? (
               <div className="glass dark:bg-black/30 bg-white/60 rounded-2xl border border-white/15 p-10 text-center dark:text-slate-500 text-slate-400">
                 No projects yet. Add one with the form.
               </div>
